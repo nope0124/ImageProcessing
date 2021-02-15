@@ -24,15 +24,16 @@ def main():
                 return
             WIDTH = ori_img.shape[1]
             HEIGHT = ori_img.shape[0]
-            if max(WIDTH, HEIGHT) >= 1000:
+            MAX = max(WIDTH, HEIGHT)
+            if max(WIDTH, HEIGHT) >= 500:
                 if ori_img.shape[0] > ori_img.shape[1]: #縦長
-                    HEIGHT = 1000
+                    HEIGHT = 500
                     WIDTH = int(HEIGHT * ori_img.shape[1] / ori_img.shape[0])
                 else: #横長
-                    WIDTH = 1000
+                    WIDTH = 500
                     HEIGHT = int(WIDTH * ori_img.shape[0] / ori_img.shape[1])
             img = cv2.resize(ori_img, (WIDTH, HEIGHT))
-            size = max(WIDTH, HEIGHT) // 50
+            size = max(WIDTH, HEIGHT) // (50 + min(0, (MAX - 500) // 10)) #サイズが500px以下なら分割数を減らす
             for i in range(HEIGHT // size + 1):
                 for j in range(WIDTH // size + 1):
                     R = 0
