@@ -1,6 +1,7 @@
 import sys
 import fileinput
 from pathlib import Path
+#import time
 
 import cv2
     
@@ -30,9 +31,8 @@ def main():
                 else: #横長
                     WIDTH = 1000
                     HEIGHT = int(WIDTH * ori_img.shape[0] / ori_img.shape[1])
-            ori_img = cv2.resize(ori_img, (WIDTH, HEIGHT))
+            img = cv2.resize(ori_img, (WIDTH, HEIGHT))
             size = max(WIDTH, HEIGHT) // 50
-            img = ori_img
             for i in range(HEIGHT // size + 1):
                 for j in range(WIDTH // size + 1):
                     R = 0
@@ -61,6 +61,7 @@ def main():
                             img[i * size + k][j * size + l][0] = R
                             img[i * size + k][j * size + l][1] = G
                             img[i * size + k][j * size + l][2] = B
+            img = cv2.resize(img, (ori_img.shape[1], ori_img.shape[0]))
             PATH = filename.rsplit('.', 1)[0] + '_mosaic'
             if Path(PATH + '.' + EXTENSION).exists():
                 cnt = 1
@@ -79,4 +80,7 @@ def main():
         print("No files")
 
 if __name__ == "__main__":
+#    start = time.time()
     main()
+#    elapsed_time = time.time() - start
+#    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
