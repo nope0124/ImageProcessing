@@ -5,6 +5,9 @@ from pathlib import Path
 #import copy
 
 import cv2
+import sklearn
+from PIL import Image
+from sklearn.cluster import KMeans
     
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG'])
 
@@ -81,9 +84,11 @@ def main():
                     cnt += 1
                 cv2.imwrite(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION, img)
                 print("Succeeded!")
+                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
             else:
                 cv2.imwrite(PATH + '.' + EXTENSION, img)
                 print("Succeeded!")
+                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
                 
         elif COMMAND == 'blur':
         
@@ -146,12 +151,65 @@ def main():
                     cnt += 1
                 cv2.imwrite(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION, tmp_img)
                 print("Succeeded!")
+                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
             else:
                 cv2.imwrite(PATH + '.' + EXTENSION, tmp_img)
                 print("Succeeded!")
+                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
                 
         elif COMMAND == 'extraction':
-            print("Invalid command")
+        
+            if max(WIDTH, HEIGHT) >= 500:
+                if ori_img.shape[0] > ori_img.shape[1]: #縦長
+                    HEIGHT = 500
+                    WIDTH = int(HEIGHT * ori_img.shape[1] / ori_img.shape[0])
+                else: #横長
+                    WIDTH = 500
+                    HEIGHT = int(WIDTH * ori_img.shape[0] / ori_img.shape[1])
+            
+            tmp_img = cv2.resize(ori_img, (WIDTH, HEIGHT))
+            img = tmp_img.reshape(tmp_img.shape[0] * tmp_img.shape[1], 3)
+            
+            n = 8
+            cluster = KMeans(n_clusters = n)
+            cluster.fit(X = img)
+            KMeans(
+                algorithm = 'auto',
+                copy_x = True,
+                init = 'k-means++',
+                max_iter = 300,
+                n_clusters = n,
+                n_init = 10,
+                n_jobs = 1,
+                precompute_distances = 'auto',
+                random_state = None,
+                tol = 0.0001,
+                verbose=0
+            )
+            
+            cluster_centers_arr = cluster.cluster_centers_.astype(int, copy=False)
+            
+            ind = cluster.predict(img)
+            for i in range(len(ind)):
+                tmp_img[i // WIDTH][i % WIDTH][0] = cluster_centers_arr[ind[i]][0]
+                tmp_img[i // WIDTH][i % WIDTH][1] = cluster_centers_arr[ind[i]][1]
+                tmp_img[i // WIDTH][i % WIDTH][2] = cluster_centers_arr[ind[i]][2]
+            
+            tmp_img = cv2.resize(tmp_img, (ori_img.shape[1], ori_img.shape[0]))
+            PATH = filename.rsplit('.', 1)[0] + '_extraction'
+            if Path(PATH + '.' + EXTENSION).exists():
+                cnt = 1
+                while Path(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).exists():
+                    cnt += 1
+                cv2.imwrite(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION, tmp_img)
+                print("Succeeded!")
+                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
+            else:
+                cv2.imwrite(PATH + '.' + EXTENSION, tmp_img)
+                print("Succeeded!")
+                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
+            
+            
         else:
             print("Invalid command")
             return
