@@ -1,8 +1,8 @@
 import sys
 import fileinput
 from pathlib import Path
-import time
-import copy
+#import time
+#import copy
 
 import cv2
     
@@ -163,7 +163,7 @@ def main():
         print("Invalid arguments")
 
 if __name__ == "__main__":
-    start = time.time()
+#    start = time.time()
     main()
-    elapsed_time = time.time() - start
-    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+#    elapsed_time = time.time() - start
+#    print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
