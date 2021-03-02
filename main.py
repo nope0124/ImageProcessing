@@ -88,7 +88,7 @@ def main():
             else:
                 cv2.imwrite(PATH + '.' + EXTENSION, img)
                 print("Succeeded!")
-                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
+                Image.open(PATH + '.' + EXTENSION).show()
                 
         elif COMMAND == 'blur':
         
@@ -155,7 +155,7 @@ def main():
             else:
                 cv2.imwrite(PATH + '.' + EXTENSION, tmp_img)
                 print("Succeeded!")
-                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
+                Image.open(PATH + '.' + EXTENSION).show()
                 
         elif COMMAND == 'extraction':
         
@@ -207,7 +207,7 @@ def main():
             else:
                 cv2.imwrite(PATH + '.' + EXTENSION, tmp_img)
                 print("Succeeded!")
-                Image.open(PATH + '(' + str(cnt) + ')' + '.' + EXTENSION).show()
+                Image.open(PATH + '.' + EXTENSION).show()
             
             
         else:
