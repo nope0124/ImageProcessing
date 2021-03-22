@@ -16,7 +16,7 @@
 <img width="300" src="https://raw.githubusercontent.com/nope0124/Mosaic/master/number_extraction.png">
 
 
-## 使い方（CUI版）
+## 使い方
 
 コマンドの種類：mosaic, blur, extraction
 
